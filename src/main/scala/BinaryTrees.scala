@@ -4,20 +4,16 @@ import scala.annotation.tailrec
 
 sealed abstract class Tree[+T]
 
-case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
-  override def toString = "T(" + value.toString + " " + left.toString + " " + right.toString + ")"
-}
+case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T]
 
-case object End extends Tree[Nothing] {
-  override def toString = "."
-}
+case object End extends Tree[Nothing]
 
 object Node {
   def apply[T](value: T): Node[T] = Node(value, End, End)
 }
 
 trait Foldable[F[_]] {
-	def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
+  def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
 }
 
 object Shows {
