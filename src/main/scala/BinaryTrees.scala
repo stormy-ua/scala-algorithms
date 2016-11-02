@@ -16,15 +16,21 @@ object Node {
   def apply[T](value: T): Node[T] = Node(value, End, End)
 }
 
-val binarySearchTree = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
+trait Foldable[F[_]] {
+	def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
+}
 
-def inOrderFold[T, V](t: Tree[T], a: V) (f: (V, T) => V): V = {
-	t match {
-		case End => a
-		case Node(v, left, right) => {
-			val al = inOrderFold(left, a)(f)
-			val ain = f(al, v)
-			inOrderFold(right, ain)(f)			
+var foldableTree = new Foldable[Tree] {
+	def foldLeft[A, B](a: Tree[A], z: B)(f: (A, B) => B): B = 
+		a match {
+			case End => z
+			case Node(v, left, right) => {
+				val zl = foldLeft(left, z)(f)
+				val zin = f(v, zl)
+				foldLeft(right, zin)(f)			
 		}
 	}	
 }
+
+val binarySearchTree = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
+foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_::_)
