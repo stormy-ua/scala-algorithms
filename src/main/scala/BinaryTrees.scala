@@ -30,6 +30,11 @@ object Shows {
   }
 
   implicit def show[A: Show](a: A): String = implicitly[Show[A]].shows(a)
+
+  implicit class ShowOps[A](val a: A) extends AnyVal {
+    def show(implicit s: Show[A]): String = s.shows(a)
+    def println(implicit s: Show[A]) = scala.Predef.println(show(s))
+  }
 }
 
 
@@ -49,6 +54,6 @@ object TreesProgram extends App {
   }
 
   val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
-  println(show(binarySearchTree))
+  binarySearchTree.println
   println(foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _))
 }
