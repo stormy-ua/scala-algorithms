@@ -21,7 +21,7 @@ object Shows {
     def shows(a: A): String
   }
 
-  val endShow = new Show[Tree[Int]] {
+  implicit val endShow = new Show[Tree[Int]] {
     def shows(a: Tree[Int]): String =
       a match {
         case End => "."
@@ -49,6 +49,6 @@ object TreesProgram extends App {
   }
 
   val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
-  println(s"Input tree: $binarySearchTree")
+  println(show(binarySearchTree))
   println(foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _))
 }
