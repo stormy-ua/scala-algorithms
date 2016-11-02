@@ -20,7 +20,7 @@ trait Foldable[F[_]] {
 	def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
 }
 
-var foldableTree = new Foldable[Tree] {
+val foldableTree = new Foldable[Tree] {
 	def foldLeft[A, B](a: Tree[A], z: B)(f: (A, B) => B): B = 
 		a match {
 			case End => z
