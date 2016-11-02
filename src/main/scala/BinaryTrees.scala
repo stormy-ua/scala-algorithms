@@ -28,8 +28,8 @@ var foldableTree = new Foldable[Tree] {
 				val zl = foldLeft(left, z)(f)
 				val zin = f(v, zl)
 				foldLeft(right, zin)(f)			
-		}
-	}	
+			}
+		}	
 }
 
 val binarySearchTree = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
