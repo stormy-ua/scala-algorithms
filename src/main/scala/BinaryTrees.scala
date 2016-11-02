@@ -21,7 +21,7 @@ object Shows {
     def shows(a: A): String
   }
 
-  implicit val endShow = new Show[Tree[Int]] {
+  implicit val treeShow = new Show[Tree[Int]] {
     def shows(a: Tree[Int]): String =
       a match {
         case End => "."
