@@ -29,6 +29,10 @@ object Shows {
       }
   }
 
+  implicit val listShow = new Show[List[Int]] {
+    override def shows(a: List[Int]): String = a.toString
+  }
+
   implicit def show[A: Show](a: A): String = implicitly[Show[A]].shows(a)
 
   implicit class ShowOps[A](val a: A) extends AnyVal {
@@ -55,5 +59,5 @@ object TreesProgram extends App {
 
   val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
   binarySearchTree.println
-  println(foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _))
+  foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _).println
 }
