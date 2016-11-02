@@ -241,7 +241,7 @@ object BTree {
 }
 
 object BTreeProgram {
-  def main (args: Array[String]) {
+  def main2 (args: Array[String]) {
     val btree = BTree[Char, Int](3)
     //for { l <- 'A' until 'Z' } btree.insert(l, l)
 

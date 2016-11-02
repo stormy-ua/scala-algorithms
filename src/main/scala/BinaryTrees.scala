@@ -1,4 +1,4 @@
-//package algorithms.trees
+package algorithms.trees
 
 import scala.annotation.tailrec
 
@@ -20,17 +20,39 @@ trait Foldable[F[_]] {
 	def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
 }
 
-val foldableTree = new Foldable[Tree] {
-	def foldLeft[A, B](a: Tree[A], z: B)(f: (A, B) => B): B = 
-		a match {
-			case End => z
-			case Node(v, left, right) => {
-				val zl = foldLeft(left, z)(f)
-				val zin = f(v, zl)
-				foldLeft(right, zin)(f)			
-			}
-		}	
+object Shows {
+  trait Show[A] {
+    def shows(a: A): String
+  }
+
+  val endShow = new Show[Tree[Int]] {
+    def shows(a: Tree[Int]): String =
+      a match {
+        case End => "."
+        case Node(v, left, right) =>  s"T($v ${shows(left)} ${shows(right)})"
+      }
+  }
+
+  implicit def show[A: Show](a: A): String = implicitly[Show[A]].shows(a)
 }
 
-val binarySearchTree = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
-foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_::_)
+
+object TreesProgram extends App {
+  import Shows._
+
+  val foldableTree = new Foldable[Tree] {
+    def foldLeft[A, B](a: Tree[A], z: B)(f: (A, B) => B): B =
+      a match {
+        case End => z
+        case Node(v, left, right) => {
+          val zl = foldLeft(left, z)(f)
+          val zin = f(v, zl)
+          foldLeft(right, zin)(f)
+        }
+      }
+  }
+
+  val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
+  println(s"Input tree: $binarySearchTree")
+  println(foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _))
+}
