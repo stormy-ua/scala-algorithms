@@ -66,16 +66,11 @@ object TreesProgram extends App {
   }
 
   val mapableTree = new Functor[Tree] {
-    override def map[A, B](a: Tree[A])(f: (A) => B): Tree[B] = {
-      def go(a: Tree[A]): Tree[B] = {
-        a match {
-          case Node(v, left, right) => Node(f(v), go(left), go(right))
-          case End => End
-        }
+    override def map[A, B](a: Tree[A])(f: (A) => B): Tree[B] =
+      a match {
+        case Node(v, left, right) => Node(f(v), map(left)(f), map(right)(f))
+        case End => End
       }
-
-      go(a)
-    }
   }
 
   val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
