@@ -16,18 +16,26 @@ trait Foldable[F[_]] {
   def foldLeft[A, B](a: F[A], z: B)(f: (A, B) => B): B
 }
 
+trait Functor[F[_]] {
+  def map[A, B](a: F[A])(f: A => B): F[B]
+}
+
 object Shows {
   trait Show[A] {
     def shows(a: A): String
   }
 
-  implicit val treeShow = new Show[Tree[Int]] {
-    def shows(a: Tree[Int]): String =
+  class TreeShow[A] extends Show[Tree[A]] {
+    def shows(a: Tree[A]): String = {
       a match {
         case End => "."
-        case Node(v, left, right) =>  s"T($v ${shows(left)} ${shows(right)})"
+        case Node(v, left, right) => s"T($v ${shows(left)} ${shows(right)})"
       }
+    }
   }
+
+  implicit val intTreeShow = new TreeShow[Int]
+  implicit val stringTreeShow = new TreeShow[String]
 
   implicit val listShow = new Show[List[Int]] {
     override def shows(a: List[Int]): String = a.toString
@@ -57,7 +65,25 @@ object TreesProgram extends App {
       }
   }
 
+  val mapableTree = new Functor[Tree] {
+    override def map[A, B](a: Tree[A])(f: (A) => B): Tree[B] = {
+      def go(a: Tree[A]): Tree[B] = {
+        a match {
+          case Node(v, left, right) => Node(f(v), go(left), go(right))
+          case End => End
+        }
+      }
+
+      go(a)
+    }
+  }
+
   val binarySearchTree: Tree[Int] = Node(6, Node(5, Node(2), Node(5)), Node(7, End, Node(8)))
   binarySearchTree.println
+
+  // fold
   foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _).println
+
+  // map over the tree using functor
+  mapableTree.map(binarySearchTree)(_ + 10).println
 }
