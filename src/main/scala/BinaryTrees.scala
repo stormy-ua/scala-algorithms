@@ -41,6 +41,10 @@ object Shows {
     override def shows(a: List[Int]): String = a.toString
   }
 
+  implicit val intShow = new Show[Int] {
+    override def shows(a: Int): String = a.toString
+  }
+
   implicit def show[A: Show](a: A): String = implicitly[Show[A]].shows(a)
 
   implicit class ShowOps[A](val a: A) extends AnyVal {
@@ -78,6 +82,7 @@ object TreesProgram extends App {
 
   // fold
   foldableTree.foldLeft(binarySearchTree, List.empty[Int])(_ :: _).println
+  foldableTree.foldLeft(binarySearchTree, 0)(_ + _).println
 
   // map over the tree using functor
   mapableTree.map(binarySearchTree)(_ + 10).println
